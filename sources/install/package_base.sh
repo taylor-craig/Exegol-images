@@ -144,20 +144,6 @@ function install_pyenv() {
     done
 }
 
-function install_firefox() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing firefox"
-    fapt firefox-esr
-    mkdir /opt/tools/firefox
-    mv /root/sources/assets/firefox/* /opt/tools/firefox/
-    pip3 install -r /opt/tools/firefox/requirements.txt
-    python3 /opt/tools/firefox/setup.py
-    add-history firefox
-    add-test-command "file /root/.mozilla/firefox/*.Exegol"
-    add-test-command "firefox --version"
-    add-to-list "firefox,https://www.mozilla.org,A web browser"
-}
-
 function install_rvm() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing rvm"
@@ -496,7 +482,6 @@ function package_base() {
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
-    install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
