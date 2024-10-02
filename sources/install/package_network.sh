@@ -7,7 +7,7 @@ function install_network_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
-    fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
+    fapt wireshark tshark masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer hydra mariadb-client redis-tools fping
     fapt remmina remmina-plugin-rdp remmina-plugin-secret
     # remmina-plugin-spice need build ?
