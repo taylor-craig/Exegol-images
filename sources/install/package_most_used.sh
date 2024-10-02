@@ -2,26 +2,12 @@
 # Author: The Exegol Project
 
 source package_base.sh
-source package_misc.sh
-source package_osint.sh
-source package_web.sh
 source package_ad.sh
 source package_wordlists.sh
-source package_mobile.sh
-source package_iot.sh
-source package_rfid.sh
-source package_voip.sh
-source package_sdr.sh
 source package_network.sh
 source package_wifi.sh
-source package_forensic.sh
 source package_cloud.sh
-source package_steganography.sh
-source package_reverse.sh
-source package_crypto.sh
-source package_code_analysis.sh
 source package_cracking.sh
-source package_c2.sh
 
 function install_most_used_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
