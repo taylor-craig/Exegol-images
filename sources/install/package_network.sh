@@ -8,7 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer hydra mariadb-client redis-tools
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools fping
     fapt remmina remmina-plugin-rdp remmina-plugin-secret
     # remmina-plugin-spice need build ?
     # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
@@ -24,6 +24,7 @@ function install_network_apt_tools() {
     add-history rdesktop
     add-history hydra
     add-history xfreerdp
+    add-history fping
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
@@ -40,7 +41,8 @@ function install_network_apt_tools() {
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
-    add-test-command "remmina --help"                          # Redis protocol
+    add-test-command "remmina --help"                               # Redis protocol
+    add-test-command "fping --version"
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
@@ -58,6 +60,7 @@ function install_network_apt_tools() {
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
     add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
+    add-to-list "fping,https://github.com/schweikert/fping, fping is a program to send ICMP echo probes to network hosts, similar to ping, but much better performing when pinging multiple hosts."
 }
 
 function install_proxychains() {
@@ -249,21 +252,6 @@ function install_rustscan() {
     add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
 }
 
-function install_legba() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing legba"
-    fapt libsmbclient-dev libsmbclient
-    git -C /opt/tools/ clone --depth 1 https://github.com/evilsocket/legba
-    cd /opt/tools/legba || exit
-    cargo build --release
-    # Clean dependencies used to build the binary
-    rm -rf target/release/{deps,build,.fingerprint}
-    ln -s /opt/tools/legba/target/release/legba /opt/tools/bin/legba
-    add-history legba
-    add-test-command "legba --help"
-    add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
-}
-
 function install_ssh-audit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ssh-audit"
@@ -272,6 +260,23 @@ function install_ssh-audit() {
     add-test-command "ssh-audit --help"
     add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
+
+function install_fping() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing legba"
+    fapt fping
+    git -C /opt/tools/ clone --depth 1 https://github.com/schweikert/fping
+    cd /opt/tools/fping || exit
+    ./autogen.sh
+    ./configure --prefix=/usr --sysconfdir=/etc
+    make; make install
+    # Clean dependencies used to build the binary
+    sudo setcap cap_net_raw,cap_net_admin+ep fping
+    add-history fping
+    add-test-command "fping --version"
+    add-to-list "fping,https://github.com/schweikert/fping, fping is a program to send ICMP echo probes to network hosts, similar to ping, but much better performing when pinging multiple hosts."
+}
+
 
 # Package dedicated to network pentest tools
 function package_network() {
@@ -296,7 +301,6 @@ function package_network() {
     install_tailscale               # Zero config VPN for building secure networks
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
-    install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
