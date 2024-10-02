@@ -26,20 +26,17 @@ source package_c2.sh
 function install_most_used_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing most used apt tools"
-    fapt hydra smbclient hashcat fcrackzip
+    fapt hydra smbclient hashcat 
 
     add-history hydra
     add-history smbclient
     add-history hashcat
-    add-history fcrackzip
 
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "hashcat --help"                               # Password cracker
-    add-test-command "fcrackzip --help"                             # Zip cracker
 
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
-    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
     add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
@@ -56,35 +53,18 @@ function package_most_used() {
     install_nmap                    # Port scanner
     install_seclists                # Awesome wordlists
     install_subfinder               # Subdomain bruteforcer
-    install_autorecon               # External recon tool
-    install_waybackurls             # Website history
-    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
-    install_simplyemail             # Gather emails
     install_ffuf                    # Web fuzzer (little favorites)
-    install_joomscan                # Joomla scanner
     install_wpscan                  # Wordpress scanner
-    install_droopescan              # Drupal scanner
-    install_drupwn                  # Drupal scanner
-    install_testssl                 # SSL/TLS scanner
-    install_cloudfail               # Cloudflare misconfiguration detector
-    install_eyewitness              # Website screenshoter
-    install_wafw00f                 # Waf detector
-    install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-    install_gittools                # Dump a git repository from a website
-    install_ysoserial               # Deserialization payloads
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
-    install_crackmapexec            # Network scanner
     install_impacket                # Network protocols scripts
     install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
     install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
     install_nuclei                  # Vulnerability scanner
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
-    install_weevely                 # Weaponized web shell
     install_sqlmap                  # SQL injection scanner
-    install_netexec                 # Crackmapexec repo
+    install_netexec                 # NetExec repo
     install_sslscan                 # SSL/TLS scanner
-    install_cyberchef               # A web based toolbox
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package most_used completed in $elapsed_time seconds."
