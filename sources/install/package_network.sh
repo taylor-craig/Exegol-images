@@ -15,7 +15,6 @@ function install_network_apt_tools() {
 
     add-history wireshark
     add-history tshark
-    add-history hping3
     add-history masscan
     add-history netdiscover
     add-history tcpdump
@@ -28,7 +27,6 @@ function install_network_apt_tools() {
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
-    add-test-command "hping3 --version"                             # Discovery tool
     add-test-command "masscan --version|& grep 'Masscan version'"   # Port scanner
     add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"  # Active/passive address reconnaissance tool
     add-test-command "tcpdump --version"                            # Capture TCP traffic
@@ -46,7 +44,6 @@ function install_network_apt_tools() {
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
-    add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
     add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
     add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool"
     add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
@@ -103,45 +100,6 @@ function install_nmap-parse-output() {
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
-}
-
-function install_autorecon() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing autorecon"
-    git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
-    ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
-    git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
-    ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
-    fapt dnsrecon wkhtmltopdf
-    pipx install --system-site-packages git+https://github.com/Tib3rius/AutoRecon
-    add-history autorecon
-    # test below cannot work because test runner cannot have a valid display
-    # add-test-command "autorecon --version"
-    add-test-command "which autorecon"
-    add-to-list "autorecon,https://github.com/Tib3rius/AutoRecon,Multi-threaded network reconnaissance tool which performs automated enumeration of services."
-}
-
-function install_dnschef() {
-    colorecho "Installing DNSChef"
-    git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
-    cd /opt/tools/dnschef || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases dnschef
-    add-history dnschef
-    add-test-command "dnschef.py --help"
-    add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
-}
-
-function install_divideandscan() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing DivideAndScan"
-    pipx install --system-site-packages git+https://github.com/snovvcrash/DivideAndScan
-    add-history divideandscan
-    add-test-command "divideandscan --help"
-    add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
 }
 
 function install_chisel() {
@@ -288,9 +246,6 @@ function package_network() {
     install_proxychains             # Network tool
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
-    install_autorecon               # External recon tool
-    install_dnschef                 # Python DNS server
-    install_divideandscan           # Python project to automate port scanning routine
     install_chisel                  # Fast TCP/UDP tunnel over HTTP
     install_sshuttle                # Transparent proxy over SSH
     install_eaphammer               # EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks.
